@@ -5,8 +5,8 @@ Dependencies: LibStub
 License: GPL 2
 Description: Status bars which can grow in any direction
 ]]
-
-local lib = LibStub:NewLibrary("LibExtendedBars-1.0", 2)
+local MAJOR, MINOR = "LibExtendedBars-1.0", 3
+local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if(not lib) then return end
 
 local data, defaults = {}, {__index={
@@ -17,10 +17,12 @@ local data, defaults = {}, {__index={
 	value = 1,
 	horizTile = false,
 	vertTile = false,
+	texture = [[Interface\Buttons\WHITE8X8]],
 	mode = "crop",
+	mouse = false,
 }}
 
-local Prototype = CreateFrame"Frame"
+local Prototype = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate" or nil)
 Prototype.__index = Prototype
 
 local function calcInsets(val, first, second)
@@ -65,6 +67,7 @@ function lib.CreateExtendedBar(name, parent, anchor, orientation)
 
 	local bar = frame:CreateTexture(nil, "OVERLAY")
 	cfg.bar = bar
+	bar:SetTexture(cfg.texture)
 
 	hooksecurefunc(frame, "SetPoint", updateBar)
 	hooksecurefunc(frame, "SetHeight", updateBar)
@@ -74,6 +77,7 @@ function lib.CreateExtendedBar(name, parent, anchor, orientation)
 
 	frame:SetOrientation(cfg.orient)
 	frame:SetAnchor(cfg.anchor)
+	frame:EnableMouse(cfg.mouse)
 
 	return frame
 end
